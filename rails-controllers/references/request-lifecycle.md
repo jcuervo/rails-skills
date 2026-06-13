@@ -14,6 +14,7 @@ Browser/client
   → Router (config/routes.rb)            ← routing.md
   → Controller instance
       → before_action filters            ← concerns-and-filters.md (+ auth: ../rails-auth/)
+      → around_action (wraps the action) ← e.g. locale switch: i18n.md
       → action method                    ← actions-and-params.md
           → strong params                ← actions-and-params.md
           → model / service call         ← ../rails-models/
@@ -51,6 +52,7 @@ concrete meaning of `config.api_only`, and why this skill branches on it.
 | Response body — JSON | `../rails-api/` |
 | Response body — HTML / Turbo | `../rails-hotwire/` |
 | Session/flash/cookies state | [sessions-flash-cookies.md](sessions-flash-cookies.md) |
+| Per-request locale selection / i18n | [i18n.md](i18n.md) |
 
 ## Custom middleware (rare)
 

@@ -50,16 +50,16 @@ Fourteen authored `rails-*` skills across six layers, plus the referenced
 ### Layer 2 — Web / request layer
 | Skill | Use it to… |
 |---|---|
-| [`rails-controllers`](rails-controllers/SKILL.md) | Routing, REST, controllers, strong params (`params.expect`), filters/concerns, error handling, sessions/flash. |
-| [`rails-api`](rails-api/SKILL.md) | JSON APIs: serialization (Jbuilder/Alba/…), versioning, pagination, error envelopes, CORS, OpenAPI docs, token surface. |
-| [`rails-hotwire`](rails-hotwire/SKILL.md) | Full-stack frontend **+ real-time**: Turbo (Drive/Frames/Streams/morphing), Stimulus, view layer (partials/ViewComponent/Phlex), Action Cable broadcasting. |
+| [`rails-controllers`](rails-controllers/SKILL.md) | Routing, REST, controllers, strong params (`params.expect`), filters/concerns, error handling, sessions/flash, i18n/locale switching. |
+| [`rails-api`](rails-api/SKILL.md) | JSON APIs: serialization (Jbuilder/Alba/…), versioning, pagination, error envelopes, CORS, OpenAPI docs, token surface — plus **GraphQL** (graphql-ruby) as the alternative API style. |
+| [`rails-hotwire`](rails-hotwire/SKILL.md) | Full-stack frontend **+ real-time**: Turbo (Drive/Frames/Streams/morphing), Stimulus, view layer (partials/ViewComponent/Phlex), Action Cable broadcasting, Action Text rich text. |
 
 ### Layer 3 — Cross-cutting app concerns
 | Skill | Use it to… |
 |---|---|
 | [`rails-auth`](rails-auth/SKILL.md) | Authentication **and** authorization: Rails 8 generator / Devise / Rodauth / authentication-zero, OmniAuth, API tokens, Pundit / Action Policy / CanCanCan. |
 | [`rails-jobs`](rails-jobs/SKILL.md) | Background jobs via Active Job: Solid Queue / Sidekiq / GoodJob, retries/idempotency, recurring tasks. |
-| [`rails-mailers`](rails-mailers/SKILL.md) | Transactional email: mailers, multipart templates, previews, delivery (SMTP/Postmark/SendGrid/SES). |
+| [`rails-mailers`](rails-mailers/SKILL.md) | Transactional email: mailers, multipart templates, previews, delivery (SMTP/Postmark/SendGrid/SES) — plus **inbound email** (Action Mailbox). |
 
 ### Layer 4 — Quality
 | Skill | Use it to… |

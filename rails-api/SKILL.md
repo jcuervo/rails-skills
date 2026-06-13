@@ -1,6 +1,6 @@
 ---
 name: rails-api
-description: Build the JSON API surface of a Rails 8.1 app — response serialization (Jbuilder, Alba, jsonapi-serializer, Blueprinter), API versioning, pagination (Pagy/Kaminari), consistent error envelopes, CORS, OpenAPI/Swagger docs, and the token-auth surface — for API-only apps and the JSON endpoints of full-stack apps. Menu-driven: presents serializer, versioning, pagination, and docs options as vetted menus with a Recommended default, detects api_only and any installed serializer/pagination gem first, and verifies endpoints return well-shaped JSON with correct status codes. Apply when shaping JSON responses, versioning an API, paginating a collection endpoint, standardizing error responses, enabling CORS, or documenting an API.
+description: Build the JSON API surface of a Rails 8.1 app — response serialization (Jbuilder, Alba, jsonapi-serializer, Blueprinter), API versioning, pagination (Pagy/Kaminari), consistent error envelopes, CORS, OpenAPI/Swagger docs, and the token-auth surface — for API-only apps and the JSON endpoints of full-stack apps. Covers both the REST path and GraphQL (graphql-ruby) as the alternative API style. Menu-driven: presents the API style (REST vs GraphQL) plus serializer, versioning, pagination, and docs options as vetted menus with a Recommended default, detects api_only and any installed serializer/pagination/graphql gem first, and verifies endpoints return well-shaped responses with correct status codes. Apply when shaping JSON responses, versioning an API, paginating a collection endpoint, standardizing error responses, enabling CORS, documenting an API, or building a GraphQL schema.
 metadata:
   owner: rails-skills
   status: stable
@@ -32,6 +32,7 @@ Use this skill when the task is:
 - Enabling/locking down CORS for browser or mobile clients
 - Generating OpenAPI/Swagger documentation
 - Designing the API-side token-auth surface (request header, 401 body)
+- Building a **GraphQL** API (graphql-ruby): schema, types, the single endpoint
 
 Do **not** use this skill when the task is:
 
@@ -52,6 +53,7 @@ grep -E "^    (jbuilder|alba|jsonapi-serializer|blueprinter|pagy|kaminari|rack-c
 ls app/serializers app/views/**/*.json.jbuilder 2>/dev/null        # existing serialization style
 ls config/initializers/cors.rb 2>/dev/null                         # CORS already configured?
 grep -rnE "namespace :v[0-9]|/v[0-9]" config/routes.rb             # existing versioning scheme
+grep -E "^ +graphql " Gemfile.lock; ls app/graphql 2>/dev/null     # GraphQL already in use? → graphql.md, skip the REST menus
 ```
 
 - If a serializer/pagination gem is **already installed**, use it silently — don't
@@ -64,8 +66,17 @@ grep -rnE "namespace :v[0-9]|/v[0-9]" config/routes.rb             # existing ve
 
 ## Menu
 
-Four menued decisions, each via `AskUserQuestion`, Rails-default marked
-**Recommended**; ask unless the gem is already installed.
+Five menued decisions, each via `AskUserQuestion`, Rails-default marked
+**Recommended**; ask unless the gem is already installed. The **API style** menu
+comes first — if it resolves to GraphQL, the serializer/versioning/pagination menus
+below don't apply (the schema, schema evolution, and connections replace them); only
+CORS and token-auth carry over.
+
+### API style
+| Option | One-line trade-off | Deep dive |
+|---|---|---|
+| **REST + JSON** *(Recommended)* | The Rails-omakase path; resourceful endpoints + a serializer, cache-friendly on URLs. The rest of this skill. | the menus below |
+| GraphQL (graphql-ruby) | One typed `POST /graphql`; clients pick fields. Great for diverse clients, but adds a schema layer + N+1/cost control you own. | [graphql.md](references/graphql.md) |
 
 ### Serializer
 | Option | One-line trade-off | Deep dive |
@@ -98,6 +109,12 @@ Four menued decisions, each via `AskUserQuestion`, Rails-default marked
 
 ## Decision Flow
 
+- **API style:** default to **REST** — it's the omakase path and HTTP-cache-friendly.
+  Choose **GraphQL** when clients are diverse and want to shape their own payloads, or
+  over/under-fetching across many REST endpoints is a real pain; accept the schema
+  layer, dataloader/N+1 vigilance, and query-cost limits it requires. The two can
+  coexist in one app. GraphQL → [graphql.md](references/graphql.md); the menus below
+  are the REST path.
 - **Serializer:** staying omakase / low volume → Jbuilder. Hot endpoints or large
   payloads → Alba (or jsonapi-serializer if clients want JSON:API). Pick **one**
   and use it consistently — mixing serializers fragments the response shape.
@@ -125,6 +142,7 @@ Four menued decisions, each via `AskUserQuestion`, Rails-default marked
 | Configure CORS for browser/mobile clients | [references/cors.md](references/cors.md) |
 | Generate OpenAPI/Swagger docs (rswag / hand-written) | [references/openapi-docs.md](references/openapi-docs.md) |
 | Design the API-side token-auth surface (Bearer header, 401 body) | [references/token-auth-surface.md](references/token-auth-surface.md) |
+| Build a GraphQL API instead of REST (schema, types, one endpoint, N+1) | [references/graphql.md](references/graphql.md) |
 
 ## Verify
 

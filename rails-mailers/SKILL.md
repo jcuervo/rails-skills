@@ -1,6 +1,6 @@
 ---
 name: rails-mailers
-description: Send transactional email from a Rails 8.1 app with Action Mailer — mailer classes, multipart HTML+text templates, layouts, attachments, inline images, previews, and delivery via SMTP (the Rails default, pointed at any provider) or Postmark / SendGrid / SES. Menu-driven delivery selection with a Recommended default; detects any configured delivery method and credentials first, sends asynchronously through Active Job (deliver_later), and verifies mail renders and delivers in development. Apply when adding a mailer, building email templates, configuring email delivery, attaching files to email, or previewing/testing mail.
+description: Send transactional email from a Rails 8.1 app with Action Mailer — mailer classes, multipart HTML+text templates, layouts, attachments, inline images, previews, and delivery via SMTP (the Rails default, pointed at any provider) or Postmark / SendGrid / SES — and receive inbound email with Action Mailbox (ingress config, mailbox routing, processing). Menu-driven delivery selection with a Recommended default; detects any configured delivery method and credentials first, sends asynchronously through Active Job (deliver_later), and verifies mail renders and delivers in development. Apply when adding a mailer, building email templates, configuring email delivery, attaching files to email, previewing/testing mail, or routing/processing incoming email.
 metadata:
   owner: rails-skills
   status: stable
@@ -16,7 +16,10 @@ Owns **transactional email** through Action Mailer: the mailer classes, multipar
 templates (HTML + text), layouts, attachments/inline images, previews, and the
 delivery configuration that puts mail on the wire. It sends **asynchronously** by
 default via Active Job (`deliver_later` — the queue is `../rails-jobs/`). Applies to
-API-only and full-stack apps alike (password resets, receipts, notifications).
+API-only and full-stack apps alike (password resets, receipts, notifications). It
+also owns the **inbound** direction via Action Mailbox (the merged inbound topic
+lives in `references/inbound-email.md` and stays distinctly invocable): routing
+received email to mailbox classes and processing it.
 
 ## When to Apply
 
@@ -27,6 +30,7 @@ Use this skill when the task is:
 - Configuring delivery (SMTP, Postmark, SendGrid, SES) and credentials
 - Attaching files to an email
 - Previewing or testing email rendering/delivery
+- Receiving/processing **inbound** email (Action Mailbox: ingress, routing, mailboxes)
 
 Do **not** use this skill when the task is:
 
@@ -46,6 +50,7 @@ grep -rnE "delivery_method|smtp_settings|postmark|sendgrid|aws_sdk|ses" config/e
 grep -E "^    (postmark-rails|sendgrid|aws-sdk-rails|aws-sdk-ses|mail)" Gemfile.lock
 ls app/mailers app/views/*_mailer 2>/dev/null               # existing mailers + templates
 grep -rn "default_url_options" config/environments/*.rb     # URLs in emails need a host
+ls app/mailboxes 2>/dev/null; grep -rn "action_mailbox.ingress" config/environments/*.rb 2>/dev/null   # inbound already set up?
 ```
 
 - If a delivery method is **already configured**, use it — don't re-ask the menu.
@@ -92,6 +97,7 @@ configured.
 | Configure delivery (SMTP / Postmark / SendGrid / SES) + credentials | [references/delivery.md](references/delivery.md) |
 | Write a mailer: actions, multipart templates, layouts, attachments, deliver_later | [references/writing-mailers.md](references/writing-mailers.md) |
 | Preview emails + test mail rendering/delivery | [references/previews-and-testing.md](references/previews-and-testing.md) |
+| Receive inbound email: ingress, mailbox routing, processing (Action Mailbox) | [references/inbound-email.md](references/inbound-email.md) |
 
 ## Verify
 

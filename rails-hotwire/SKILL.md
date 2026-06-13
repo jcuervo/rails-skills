@@ -1,6 +1,6 @@
 ---
 name: rails-hotwire
-description: Build the full-stack frontend of a Rails 8.1 app with Hotwire — Turbo Drive/Frames/Streams (including Turbo 8 morphing page refreshes), Stimulus controllers, the view layer (ERB partials, ViewComponent, or Phlex), forms, and assets — plus real-time features via Action Cable and Turbo Stream broadcasting over Solid Cable or Redis. Menu-driven: presents the view-layer and Cable-adapter options as vetted menus with a Recommended default, detects the app's already-chosen CSS/JS stack (owned by rails-scaffold) and existing Hotwire wiring first, and verifies pages render and live updates broadcast. Apply when building interactive UI, wiring Turbo Frames/Streams, writing Stimulus controllers, choosing a view-component approach, or adding live/broadcast updates. Web apps only — not API-only.
+description: Build the full-stack frontend of a Rails 8.1 app with Hotwire — Turbo Drive/Frames/Streams (including Turbo 8 morphing page refreshes), Stimulus controllers, the view layer (ERB partials, ViewComponent, or Phlex), forms, assets, and rich-text editing with Action Text (the bundled Trix editor) — plus real-time features via Action Cable and Turbo Stream broadcasting over Solid Cable or Redis. Menu-driven: presents the view-layer and Cable-adapter options as vetted menus with a Recommended default, detects the app's already-chosen CSS/JS stack (owned by rails-scaffold) and existing Hotwire wiring first, and verifies pages render and live updates broadcast. Apply when building interactive UI, wiring Turbo Frames/Streams, writing Stimulus controllers, choosing a view-component approach, adding a rich-text editor, or adding live/broadcast updates. Web apps only — not API-only.
 metadata:
   owner: rails-skills
   status: stable
@@ -29,6 +29,7 @@ Use this skill when the task is:
 - Writing Stimulus controllers for client-side behavior
 - Choosing/structuring the view layer (partials vs ViewComponent vs Phlex)
 - Building forms with `form_with` and Turbo-correct responses
+- Rich-text editing (Action Text / Trix) for user-authored formatted content
 - Live/real-time updates (broadcasting changes to connected clients)
 - Wiring assets/CSS/JS within an already-chosen stack
 
@@ -52,6 +53,7 @@ cat config/cable.yml 2>/dev/null                     # current Cable adapter (so
 ls app/components 2>/dev/null; find app/views -name '_*.html.erb' -print -quit 2>/dev/null   # view style: components vs partials
 test -f config/importmap.rb && echo "importmap" ; test -f package.json && echo "bundler (esbuild/bun/vite)"
 grep -E "tailwind|bootstrap|bulma|sass" Gemfile.lock # the CSS stack scaffold chose
+grep -rln "has_rich_text" app/models 2>/dev/null; grep -rn "trix" config/importmap.rb package.json 2>/dev/null   # Action Text already wired?
 ```
 
 - **`config.api_only == true` → do not use this skill.** Route to `../rails-api/`.
@@ -107,6 +109,7 @@ menued here — they were chosen in `../rails-scaffold/`; this skill consumes th
 | Stimulus controllers: targets, actions, values, lifecycle | [references/stimulus.md](references/stimulus.md) |
 | Choose + structure the view layer (partials / ViewComponent / Phlex) | [references/view-layer.md](references/view-layer.md) |
 | Forms with `form_with`, Turbo-correct responses (422 on invalid) | [references/forms-and-responses.md](references/forms-and-responses.md) |
+| Rich-text editor + content (Action Text / Trix, `has_rich_text`) | [references/rich-text.md](references/rich-text.md) |
 | Real-time: Action Cable, Turbo Stream broadcasting, Solid Cable vs Redis | [references/real-time.md](references/real-time.md) |
 | Assets, Propshaft, working within the chosen CSS/JS stack | [references/assets-and-css.md](references/assets-and-css.md) |
 

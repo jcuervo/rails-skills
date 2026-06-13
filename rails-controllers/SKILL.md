@@ -1,6 +1,6 @@
 ---
 name: rails-controllers
-description: Build the request layer of a Rails 8.1 app — routing, RESTful resources, controllers, actions, strong parameters (Rails 8 params.expect and the require/permit fallback), filters/before_actions, controller concerns, rescue_from error handling, and the session/flash/cookies surface — for both API-only and full-stack apps. Branches on config.api_only (API skips flash/views, Web uses them), detects existing routes/controllers before generating, presents the params and routing idioms as menus with a Recommended default, and verifies routes resolve and actions respond. Apply when adding routes or controllers, shaping strong params, sharing controller behavior, handling request errors, or wiring sessions/flash.
+description: Build the request layer of a Rails 8.1 app — routing, RESTful resources, controllers, actions, strong parameters (Rails 8 params.expect and the require/permit fallback), filters/before_actions, controller concerns, rescue_from error handling, the session/flash/cookies surface, and per-request locale selection / i18n — for both API-only and full-stack apps. Branches on config.api_only (API skips flash/views, Web uses them), detects existing routes/controllers before generating, presents the params and routing idioms as menus with a Recommended default, and verifies routes resolve and actions respond. Apply when adding routes or controllers, shaping strong params, sharing controller behavior, handling request errors, wiring sessions/flash, or setting up internationalization/locale switching.
 metadata:
   owner: rails-skills
   status: stable
@@ -30,6 +30,7 @@ Use this skill when the task is:
 - Sharing behavior across controllers (`before_action`, controller concerns)
 - Turning exceptions into HTTP responses (`rescue_from`, status codes)
 - Sessions, flash, and cookies (full-stack)
+- Internationalization: per-request locale selection + the `I18n` catalog API (`t`/`l`)
 
 Do **not** use this skill when the task is:
 
@@ -49,6 +50,7 @@ grep -nE "api_only" config/application.rb                 # API-only vs full-sta
 bin/rails routes | head -30                               # existing route table
 ls app/controllers app/controllers/concerns 2>/dev/null   # existing controllers + shared concerns
 sed -n 's/.*rails (\(.*\))/Rails \1/p' Gemfile.lock | head -1   # version → params.expect availability
+ls config/locales/ 2>/dev/null; grep -nE "default_locale|available_locales|i18n.fallbacks" config/application.rb config/environments/*.rb 2>/dev/null  # existing i18n setup
 ```
 
 - `config.api_only == true` → **API mode**: no flash/cookies-based UI state, no
@@ -108,6 +110,7 @@ throughout (it was chosen in `../rails-scaffold/`).
 | Building responses: formats, status codes, redirects, `respond_to` (API vs Web) | [references/responses.md](references/responses.md) |
 | `before_action`/filters, controller concerns, `rescue_from` error handling | [references/concerns-and-filters.md](references/concerns-and-filters.md) |
 | Sessions, flash, cookies (full-stack) | [references/sessions-flash-cookies.md](references/sessions-flash-cookies.md) |
+| Internationalization: per-request locale, translation/localization (`t`/`l`), fallbacks | [references/i18n.md](references/i18n.md) |
 | The full request lifecycle: middleware → routing → action → response | [references/request-lifecycle.md](references/request-lifecycle.md) |
 
 ## Verify

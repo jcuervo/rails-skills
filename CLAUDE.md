@@ -41,10 +41,13 @@ each via the authoring + review loop below.
 
 ## The 14 skills (and merged topics)
 
-`rails-scaffold` (guided new-app interview + router) · `rails-upgrade` (brownfield framework-version upgrades; built last) · `rails-models` (*+persistence/DB*) · `rails-controllers` · `rails-api` · `rails-hotwire` (*+real-time/Action Cable*) · `rails-auth` (unified authn+authz) · `rails-jobs` · `rails-mailers` · `rails-storage` · `rails-testing` · `rails-security` (proactive; complements `rails-audit`) · `rails-performance` · `rails-deploy` (*+observability*).
+`rails-scaffold` (guided new-app interview + router) · `rails-upgrade` (brownfield framework-version upgrades; built last) · `rails-models` (*+persistence/DB*) · `rails-controllers` (*+i18n*) · `rails-api` (*+GraphQL*) · `rails-hotwire` (*+real-time/Action Cable, +rich text/Action Text*) · `rails-auth` (unified authn+authz) · `rails-jobs` · `rails-mailers` (*+inbound/Action Mailbox*) · `rails-storage` · `rails-testing` · `rails-security` (proactive; complements `rails-audit`) · `rails-performance` · `rails-deploy` (*+observability*).
 
-Merged topics (database, real-time, observability) live in their host skill's
-`references/` and must stay **distinctly invocable**.
+Merged topics live in their host skill's `references/` and must stay **distinctly
+invocable**: database → `rails-models`; real-time → `rails-hotwire`; observability →
+`rails-deploy`; **inbound email (Action Mailbox) → `rails-mailers`**; **rich text
+(Action Text) → `rails-hotwire`**; **i18n/localization → `rails-controllers`**;
+**GraphQL → `rails-api`** (as an alternative API style, REST stays Recommended).
 
 ## House style for authoring a skill
 

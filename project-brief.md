@@ -43,7 +43,10 @@ coexist without conflict.
 database→models, realtime→hotwire, observability→deploy — each merged topic stays
 distinctly invocable from its host skill's `references/`; then +1 for
 `rails-upgrade`). Names are `rails-*`. Each is one skill directory with
-`SKILL.md` + `references/`.
+`SKILL.md` + `references/`. Later additions fold four more first-class Rails
+subsystems into their natural hosts (still 14 skills, same distinctly-invocable
+rule): inbound email (Action Mailbox)→mailers, rich text (Action Text)→hotwire,
+i18n→controllers, GraphQL→api.
 
 ### Layer 0 — Foundation (entry points)
 | Skill | Purpose | Key menus / decisions |
@@ -60,16 +63,16 @@ distinctly invocable from its host skill's `references/`; then +1 for
 ### Layer 2 — Web / request layer
 | Skill | Purpose | Key menus / decisions |
 |---|---|---|
-| **rails-controllers** | Routing, REST, controllers, strong params, concerns, sessions, flash, request lifecycle (shared by API + Web) | RESTful structure · params patterns · response handling |
-| **rails-api** | API-only concerns: serialization, versioning, pagination, error envelopes, OpenAPI docs, CORS, token auth surface | Serializer (Jbuilder / Alba / JSONAPI-serializer / Blueprinter) · versioning strategy · pagination (Pagy / Kaminari) · docs (rswag / OpenAPI) |
-| **rails-hotwire** | Full-stack frontend **+ real-time** (merged): Turbo (Drive/Frames/Streams), Stimulus, views, components, assets — **plus** Action Cable + Turbo Stream broadcasting (Solid Cable / Redis). Real-time lives in `references/` and stays distinctly invocable. | Views (partials / ViewComponent / Phlex) · CSS (Tailwind / Bootstrap / vanilla + Propshaft) · JS (import maps / esbuild / Vite) · Cable adapter (Solid Cable / Redis) |
+| **rails-controllers** | Routing, REST, controllers, strong params, concerns, sessions, flash, request lifecycle (shared by API + Web) **+ i18n** (per-request locale selection + the `I18n` catalog API; lives in `references/` and stays distinctly invocable) | RESTful structure · params patterns · response handling |
+| **rails-api** | API-only concerns: serialization, versioning, pagination, error envelopes, OpenAPI docs, CORS, token auth surface **+ GraphQL** (graphql-ruby as an alternative API style; REST stays Recommended; lives in `references/` and stays distinctly invocable) | API style (REST / GraphQL) · Serializer (Jbuilder / Alba / JSONAPI-serializer / Blueprinter) · versioning strategy · pagination (Pagy / Kaminari) · docs (rswag / OpenAPI) |
+| **rails-hotwire** | Full-stack frontend **+ real-time + rich text** (merged): Turbo (Drive/Frames/Streams), Stimulus, views, components, assets — **plus** Action Cable + Turbo Stream broadcasting (Solid Cable / Redis), **plus** Action Text / Trix rich-text editing. Real-time and rich-text live in `references/` and stay distinctly invocable. | Views (partials / ViewComponent / Phlex) · CSS (Tailwind / Bootstrap / vanilla + Propshaft) · JS (import maps / esbuild / Vite) · Cable adapter (Solid Cable / Redis) |
 
 ### Layer 3 — Cross-cutting app concerns
 | Skill | Purpose | Key menus / decisions |
 |---|---|---|
 | **rails-auth** | Authentication **and** authorization (unified). Offers the top auth solutions as a menu and provides per-solution integration guidance (install → wire → routes/controllers → views or token surface → tests). | AuthN: Rails 8 generator + `has_secure_password` *(Recommended)* / Devise / Rodauth (rodauth-rails) / authentication-zero · social/3rd-party via OmniAuth · API token (Devise-JWT / custom) · AuthZ: Pundit / Action Policy / CanCanCan |
 | **rails-jobs** | Background jobs via Active Job: queues, retries, scheduling, recurring tasks | Backend (Solid Queue / Sidekiq / GoodJob) · scheduler (Solid Queue recurring / sidekiq-cron / whenever) |
-| **rails-mailers** | Action Mailer: transactional email, previews, delivery, templates | Delivery (SMTP / Postmark / SendGrid / SES) · multipart/templating |
+| **rails-mailers** | Action Mailer: transactional email, previews, delivery, templates **+ inbound email** (Action Mailbox: ingress, mailbox routing, processing; lives in `references/` and stays distinctly invocable) | Delivery (SMTP / Postmark / SendGrid / SES) · multipart/templating |
 
 ### Layer 4 — Quality
 | Skill | Purpose | Key menus / decisions |
