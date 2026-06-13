@@ -1,0 +1,3 @@
+[submodule "rails-audit"]
+	path = rails-audit
+	url = https://github.com/jcuervo/rails-audit-claude-skill.git

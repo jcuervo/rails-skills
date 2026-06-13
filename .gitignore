@@ -1,0 +1,31 @@
+# This repo authors Claude Code Agent Skills (markdown), not a Rails app —
+# there's no build/log/tmp/dependency output to ignore. Keep this minimal so
+# skill content and .claude/agents/ (the reviewer rubric) stay tracked.
+
+# OS cruft
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Editors / IDEs
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+.\#*
+\#*\#
+
+# Claude Code local (machine-specific) settings — keep shared config tracked
+.claude/settings.local.json
+.claude/*.local.json
+
+# Scratch / local notes
+/scratch/
+/tmp/
+*.log
