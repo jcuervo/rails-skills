@@ -106,9 +106,8 @@ See **[INSTALL.md](INSTALL.md)** for the full options. Quickest path — copy th
 skills into your Claude Code skills directory:
 
 ```bash
-git clone --recurse-submodules https://github.com/<your-org>/rails-skills.git
+git clone --recurse-submodules https://github.com/jcuervo/rails-skills.git
 cp -R rails-skills/rails-* ~/.claude/skills/        # personal scope
-# (replace <your-org> with the published repo owner)
 ```
 
 Then, in Claude Code working on a Rails project, invoke a skill (e.g.

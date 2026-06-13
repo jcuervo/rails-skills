@@ -4,8 +4,6 @@ These are **Claude Code Agent Skills** (`SKILL.md` + `references/` per skill). T
 them, Claude Code must be able to discover them. There are three install paths —
 pick the one that matches how you want to scope them.
 
-> Replace `<your-org>/rails-skills` below with the actual published repo slug.
-
 ## Prerequisites
 
 - **Claude Code** installed (`claude` CLI, the desktop/web app, or an IDE extension).
@@ -19,7 +17,7 @@ Copy (or symlink) the skills into your user-level skills directory so they're
 available in every project:
 
 ```bash
-git clone --recurse-submodules https://github.com/<your-org>/rails-skills.git
+git clone --recurse-submodules https://github.com/jcuervo/rails-skills.git
 cd rails-skills
 
 # Copy all 14 authored skills into the personal scope:

@@ -22,11 +22,10 @@ reviewed, and findings-closed**, and the repo deliverables (`README.md`,
 link integrity has been verified (no dead local links, no orphans, all `../../`
 cross-skill deep-links resolve). The suite is ready to publish.
 
-**Remaining before a public release:** `git init` the repo (the environment is not
-yet a git repo), then `git submodule add
-https://github.com/jcuervo/rails-audit-claude-skill.git rails-audit` to materialize
-the submodule recorded in `.gitmodules`; find-and-replace the `<your-org>/rails-skills`
-placeholder in `README.md`/`INSTALL.md` with the real repo slug. Further work is
+**Release prep is complete:** the repo is initialized with `origin`
+`https://github.com/jcuervo/rails-skills.git`, the `rails-audit` submodule is
+materialized from `jcuervo/rails-audit-claude-skill`, and the repo slug is filled in
+throughout `README.md`/`INSTALL.md` (no placeholders remain). Further work is
 maintenance: extend a skill's menus, add a skill, or refresh version-specific facts —
 each via the authoring + review loop below.
 
