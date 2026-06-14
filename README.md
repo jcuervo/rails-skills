@@ -32,7 +32,7 @@ stack; the skills implement it correctly and verify it works.
 
 ## The skills
 
-Fourteen authored `rails-*` skills across six layers, plus the referenced
+Fifteen authored `rails-*` skills across six layers, plus the referenced
 `rails-audit` (bundled as a git submodule):
 
 ### Layer 0 — Entry points
@@ -53,6 +53,7 @@ Fourteen authored `rails-*` skills across six layers, plus the referenced
 | [`rails-controllers`](rails-controllers/SKILL.md) | Routing, REST, controllers, strong params (`params.expect`), filters/concerns, error handling, sessions/flash, i18n/locale switching. |
 | [`rails-api`](rails-api/SKILL.md) | JSON APIs: serialization (Jbuilder/Alba/…), versioning, pagination, error envelopes, CORS, OpenAPI docs, token surface — plus **GraphQL** (graphql-ruby) as the alternative API style. |
 | [`rails-hotwire`](rails-hotwire/SKILL.md) | Full-stack frontend **+ real-time**: Turbo (Drive/Frames/Streams/morphing), Stimulus, view layer (partials/ViewComponent/Phlex), Action Cable broadcasting, Action Text rich text. |
+| [`rails-seo`](rails-seo/SKILL.md) | On-page/technical SEO for rendered HTML: title/description/canonical meta tags, Open Graph + Twitter cards, JSON-LD structured data, XML sitemaps, robots.txt, SEO-friendly slugs. |
 
 ### Layer 3 — Cross-cutting app concerns
 | Skill | Use it to… |
