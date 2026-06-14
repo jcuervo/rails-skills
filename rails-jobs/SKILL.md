@@ -28,6 +28,7 @@ Use this skill when the task is:
 - Choosing or configuring a queue backend (Solid Queue / Sidekiq / GoodJob)
 - Writing an Active Job with retries, discards, priorities, or idempotency
 - Scheduling recurring or cron-style jobs
+- Purging/anonymizing data past a retention window on a schedule (data retention)
 - Running/operating the worker process locally
 
 Do **not** use this skill when the task is:
@@ -55,7 +56,11 @@ cat config/cable.yml >/dev/null 2>&1; bin/rails about 2>/dev/null | grep -i "rai
 - If Sidekiq/GoodJob is installed, match it — don't re-ask the menu.
 - Read the configured `config.active_job.queue_adapter` per environment before
   changing it.
-- Honor any jobs backend recorded in `STACK.md` by `../rails-scaffold/`.
+- Honor any jobs backend recorded in `STACK.md` by `../rails-scaffold/`. If its
+  **`Compliance`** row lists `gdpr`/`ccpa`/`hipaa`, **proactively offer** a scheduled
+  retention purge for models holding personal data — see
+  [data-retention.md](references/data-retention.md). `none`/absent → add one only when
+  asked; offering still means asking before scheduling a destructive job.
 
 ## Menu
 
@@ -88,6 +93,11 @@ unless the backend is already installed.
   operational choice is `../rails-deploy/`; this skill makes the job *run* locally.
 - **Recurring:** **Solid Queue recurring** unless you're on Sidekiq
   (sidekiq-cron) or want OS cron independent of the backend (whenever).
+- **Data retention:** a scheduled purge is a recurring job that deletes or anonymizes
+  data past a retention window. Hard-delete rows with no value past the window
+  (`in_batches.delete_all`); anonymize rows you must keep via the model's erase path
+  (`../rails-models/` `data-protection.md`). The window is a **policy value the team
+  sets** — never hard-code a guessed number. See [data-retention.md](references/data-retention.md).
 - **Job design:** keep jobs **small, idempotent, and retry-safe** — pass record IDs
   (GlobalID) not objects, make re-runs harmless, and decide `retry_on` vs
   `discard_on` per error class. See [writing-jobs.md](references/writing-jobs.md).
@@ -100,6 +110,7 @@ unless the backend is already installed.
 | Sidekiq or GoodJob: when + how to set up | [references/backend-alternatives.md](references/backend-alternatives.md) |
 | Write a job: perform_later, arguments, retry_on/discard_on, idempotency | [references/writing-jobs.md](references/writing-jobs.md) |
 | Recurring/scheduled tasks (Solid Queue recurring / sidekiq-cron / whenever) | [references/scheduling-recurring.md](references/scheduling-recurring.md) |
+| Data retention: scheduled purge/anonymize past a window (batching, idempotency, the Compliance switch) | [references/data-retention.md](references/data-retention.md) |
 
 ## Verify
 

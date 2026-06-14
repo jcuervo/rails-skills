@@ -91,7 +91,33 @@ No `rails new` flag. Just record the intended approach (Rails 8 built-in generat
 *(Recommended)* / Devise / Rodauth / authentication-zero, plus authZ pick) so the
 hand-off invokes `rails-auth` with context. Do not run any auth generator here.
 
-## 7. Assemble + run
+## 7. Compliance posture *(optional)*
+
+No `rails new` flag, **default `none`** — this step never scaffolds anything here.
+Ask **one optional** question: *does this app carry data-protection, audit, or
+accessibility obligations?* Offer the tags as a skippable multi-select:
+
+- **none** *(default)* — nothing recorded; compliance primitives stay **reactive**
+  (applied only if explicitly requested later). Keeps the unopinionated default.
+- **gdpr / ccpa** — personal-data rights: encryption at rest, consent, data export,
+  erasure/anonymization → owned by `../rails-models/` (`data-protection.md`).
+- **audit-trail** — who-changed-what change logging → `../rails-models/`
+  (`audit-trail.md`).
+- **soc2** — primarily an audit-trail / access-logging obligation →
+  `../rails-models/` (`audit-trail.md`).
+- **hipaa** — protected health info implies *both* an audit trail and personal-data
+  handling; siblings treat `hipaa` as a trigger for both primitives.
+- **wcag / section508** *(full-stack only)* — accessibility obligation → escalates
+  `../rails-hotwire/` (`accessibility.md`) to a proactive per-view pass + an axe test
+  gate. (A11y is baseline for any full-stack app regardless; this tag *enforces* it.)
+
+Write the answer to the `STACK.md` `Compliance` row (see skeleton in step 10). It
+generates nothing now — it only flips the relevant siblings from "ask when prompted"
+to "**proactively offer** the primitive at the right moment." This is a *switch*, not
+a mandate: the agent still asks before wiring anything, and `none`/absent preserves
+the suite's default behavior.
+
+## 8. Assemble + run
 
 Build the command from the recorded answers. Example shapes:
 
@@ -122,7 +148,7 @@ cd <app-name>
 if [ -x bin/setup ]; then bin/setup; else bundle install && bin/rails db:prepare; fi
 ```
 
-## 8. Verify (gate — all must pass)
+## 9. Verify (gate — all must pass)
 
 ```bash
 bin/rails about                       # confirm Ruby 4.0.x / Rails 8.1.x
@@ -140,7 +166,7 @@ kill "$(cat tmp/pids/server.pid)"     # stop via pidfile, not job control
 
 If `/up` is not 200, the app is not bootable — fix before routing onward.
 
-## 9. Record + route
+## 10. Record + route
 
 Write `STACK.md` at the app root capturing every pick (one row per concern,
 including the flag used). Siblings read it to avoid re-asking. Then route in
@@ -168,4 +194,20 @@ Suggested `STACK.md` skeleton:
 | Deploy | Kamal + Thruster | — |
 | Test framework | RSpec | -T (then rails-testing) |
 | Auth | Rails 8 generator + Pundit | — (then rails-auth) |
+| Compliance | none | — |
 ```
+
+The **`Compliance`** row is the suite's opt-in compliance switch. Its value is a
+comma-separated list of tags (or `none`):
+
+| Tag | Siblings that proactively offer a primitive when set |
+|---|---|
+| `none` *(default)* | — (compliance primitives stay reactive: applied only when asked) |
+| `gdpr` / `ccpa` | `../rails-models/` `data-protection.md` — encryption at rest, consent, export, erasure |
+| `audit-trail` | `../rails-models/` `audit-trail.md` — change logging |
+| `soc2` | `../rails-models/` `audit-trail.md` — change logging (audit/access focus) |
+| `hipaa` | both of the above (a trigger for both primitives everywhere) |
+| `wcag` / `section508` | `../rails-hotwire/` `accessibility.md` — escalate to a per-view a11y pass + axe gate *(full-stack only)* |
+
+Siblings read this row in their **Detect Before You Generate** step. A set tag means
+"offer the primitive at the right moment"; it never auto-generates without asking.

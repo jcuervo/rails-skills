@@ -31,6 +31,8 @@ Use this skill when the task is:
 - Choosing the schema format (`schema.rb` vs `structure.sql`)
 - Splitting into multiple databases, adding a read replica, or sharding
 - Adding full-text or fuzzy search over a model
+- Recording a change/audit trail over a model (who changed what, when; version/undo)
+- Protecting personal data: encrypting columns at rest, recording consent, exporting a subject's data, or erasing/anonymizing it (GDPR/CCPA-style data rights)
 - Writing seeds / sample data
 
 Do **not** use this skill when the task is:
@@ -58,7 +60,13 @@ ls app/models/                                                  # existing model
 ```
 
 - The **adapter is already chosen** (by `rails-scaffold` or a prior dev). Detect it; adapter-specific features (Postgres JSONB/arrays/`pg_search`, SQLite FTS5) follow from it — do not re-ask the `-d` question here.
-- If `STACK.md` exists at the app root, read it — it records the scaffold picks.
+- If `STACK.md` exists at the app root, read it — it records the scaffold picks,
+  including the **`Compliance`** row (the opt-in compliance switch). If it lists
+  `gdpr`/`ccpa`/`hipaa`, **proactively offer** the [data-protection.md](references/data-protection.md)
+  primitives (encryption at rest, consent, export, erasure) at the right moment; if
+  it lists `audit-trail`/`soc2`/`hipaa`, proactively offer
+  [audit-trail.md](references/audit-trail.md). `none`/absent → stay reactive (apply
+  only when the task explicitly asks). Offering still means asking — never auto-wire.
 - If a model/table already exists, **read it before editing** and write an idempotent migration that adds only what's missing.
 
 ## Menu
@@ -89,6 +97,17 @@ agent asks unless the app already constrains the pick.
 | Meilisearch | Dedicated typo-tolerant search engine; great relevance, light ops. Adds a service. | [search.md](references/search.md) |
 | Elasticsearch / OpenSearch | Heaviest; pick for large-scale, aggregations, or existing ES infra. | [search.md](references/search.md) |
 
+### Change auditing / audit trail
+No Rails-default exists for model auditing, so **Recommended** marks the common
+purpose-built choice, not an omakase pick. Ask only when an audit trail is actually
+required; detect an installed gem first and reuse it.
+| Option | One-line trade-off | Deep dive |
+|---|---|---|
+| **`audited`** *(Recommended)* | Polymorphic `audits` table, automatic actor from `current_user`, stores the diff per change. Most direct "who changed what." | [audit-trail.md](references/audit-trail.md) |
+| Rails-native (custom `Audit`) | Zero deps; an `after_commit` hook records `saved_changes` with `Current.user`. For simple needs. | [audit-trail.md](references/audit-trail.md) |
+| `paper_trail` | Full-object snapshots + `reify` to restore a past state. Pick for undo/versioning, not just logging. | [audit-trail.md](references/audit-trail.md) |
+| `logidze` | Postgres-only trigger + JSONB log on the row; fastest, no extra table. Pick for high write volume. | [audit-trail.md](references/audit-trail.md) |
+
 ## Decision Flow
 
 - **Modeling variants?** Same columns across types → STI. Diverging columns →
@@ -101,6 +120,17 @@ agent asks unless the app already constrains the pick.
 - **Search?** Prototype/small table → DB-native `LIKE` or Postgres FTS. Real
   search on Postgres → `pg_search`. Typo-tolerance/relevance without running ES →
   Meilisearch. Massive scale or existing cluster → Elasticsearch.
+- **Audit trail?** Need a who-changed-what log → `audited`. Need to *restore* old
+  versions → `paper_trail`. Postgres + high write volume → `logidze`. Simple,
+  dependency-free → a native `Audit` model. Add it only where a trail is required —
+  it carries a per-write cost. See [audit-trail.md](references/audit-trail.md).
+- **Personal data?** Encrypt sensitive columns (`encrypts`; deterministic only where
+  you must query), record consent as an append-only log, and build erase/export as
+  idempotent jobs. **Erase vs anonymize per association**: hard-delete rows with no
+  value without the person; anonymize rows you must keep (orders, invoices). The
+  cascade (`dependent:`) correctness is the whole game — miss a child and PII leaks.
+  See [data-protection.md](references/data-protection.md). The mechanics only — the
+  legal determination isn't this skill's.
 - **Validations vs DB constraints?** Do both — model validations for UX messages,
   DB constraints (`NOT NULL`, unique index, FK, `CHECK`) for integrity that
   survives concurrency and direct SQL. See
@@ -119,6 +149,8 @@ agent asks unless the app already constrains the pick.
 | Model variants: plain / STI / delegated types / polymorphic | [references/inheritance-and-types.md](references/inheritance-and-types.md) |
 | Enums, scopes, value objects, `generates_token_for` | [references/enums-and-scopes.md](references/enums-and-scopes.md) |
 | Full-text / fuzzy search (DB-native / pg_search / Meilisearch / Elastic) | [references/search.md](references/search.md) |
+| Audit trail / change logging (audited / native / paper_trail / logidze) | [references/audit-trail.md](references/audit-trail.md) |
+| Personal data: encryption at rest, consent, data export, erasure/anonymization (GDPR/CCPA) | [references/data-protection.md](references/data-protection.md) |
 | Multiple databases, read replicas, sharding, where Solid backends live | [references/multi-database.md](references/multi-database.md) |
 | Seeds and sample data | [references/seeds.md](references/seeds.md) |
 

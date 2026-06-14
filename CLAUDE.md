@@ -29,6 +29,27 @@ throughout `README.md`/`INSTALL.md` (no placeholders remain). Further work is
 maintenance: extend a skill's menus, add a skill, or refresh version-specific facts —
 each via the authoring + review loop below.
 
+**Compliance primitives (added 2026-06-14; reviewed + runtime-validated):** four
+technical-primitive references, all gated behind a single **opt-in switch** — a
+`STACK.md` `Compliance` row written by `rails-scaffold`'s interview (step 7, default
+`none`, recorded explicitly). Set tags make the host skill **proactively offer** the
+primitive (it still asks — nothing auto-wires, and nothing asserts the app *is*
+legally compliant; conformance/retention/WCAG *levels* are user policy, not code
+defaults). Tag → reference map (the contract every consumer reads in its
+detect-before-generate step):
+- `gdpr`/`ccpa`/`hipaa` → `rails-models/references/data-protection.md` (AR Encryption at rest, consent, export, erasure/anonymization)
+- `audit-trail`/`soc2`/`hipaa` → `rails-models/references/audit-trail.md` (audited / native / paper_trail / logidze; logidze is Postgres-only)
+- `gdpr`/`ccpa`/`hipaa` → `rails-jobs/references/data-retention.md` (scheduled purge/anonymize past a retention window)
+- `wcag`/`section508` → `rails-hotwire/references/accessibility.md` (always baseline for full-stack; the tag *escalates* to a per-view pass + axe CI gate)
+
+`hipaa` fans out to both data-protection and audit-trail; `none`/absent → reactive
+(applied only when explicitly asked). All four passed rubric review, a two-axis
+consolidated review, **and** Verify-snippet execution against a real Ruby 4.0.1 /
+Rails 8.1.3 scratch app — which caught two accuracy fixes now closed: AR Encryption
+does **not** auto-read `ACTIVE_RECORD_ENCRYPTION_*` env vars (wire them in config),
+and paper_trail `reify` needs `yaml_column_permitted_classes` (or the JSON serializer)
+on modern Ruby/Psych.
+
 ## Locked decisions (do not re-ask)
 
 - **Targets:** Ruby **4.0.x** (note: Ruby went 3.4 → 4.0, there is no 3.5), Rails **8.1.x**.
@@ -48,6 +69,11 @@ invocable**: database → `rails-models`; real-time → `rails-hotwire`; observa
 `rails-deploy`; **inbound email (Action Mailbox) → `rails-mailers`**; **rich text
 (Action Text) → `rails-hotwire`**; **i18n/localization → `rails-controllers`**;
 **GraphQL → `rails-api`** (as an alternative API style, REST stays Recommended).
+
+The **compliance primitives** follow the same host-reference pattern, gated by the
+opt-in `STACK.md` `Compliance` switch (see Current status): **audit trail + GDPR/CCPA
+data rights → `rails-models`**; **data retention/purge → `rails-jobs`**;
+**accessibility (WCAG/Section 508) → `rails-hotwire`**.
 
 ## House style for authoring a skill
 

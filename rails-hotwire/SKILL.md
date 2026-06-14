@@ -1,6 +1,6 @@
 ---
 name: rails-hotwire
-description: Build the full-stack frontend of a Rails 8.1 app with Hotwire — Turbo Drive/Frames/Streams (including Turbo 8 morphing page refreshes), Stimulus controllers, the view layer (ERB partials, ViewComponent, or Phlex), forms, assets, and rich-text editing with Action Text (the bundled Trix editor) — plus real-time features via Action Cable and Turbo Stream broadcasting over Solid Cable or Redis. Menu-driven: presents the view-layer and Cable-adapter options as vetted menus with a Recommended default, detects the app's already-chosen CSS/JS stack (owned by rails-scaffold) and existing Hotwire wiring first, and verifies pages render and live updates broadcast. Apply when building interactive UI, wiring Turbo Frames/Streams, writing Stimulus controllers, choosing a view-component approach, adding a rich-text editor, or adding live/broadcast updates. Web apps only — not API-only.
+description: Build the full-stack frontend of a Rails 8.1 app with Hotwire — Turbo Drive/Frames/Streams (including Turbo 8 morphing page refreshes), Stimulus controllers, the view layer (ERB partials, ViewComponent, or Phlex), forms, assets, and rich-text editing with Action Text (the bundled Trix editor) — plus real-time features via Action Cable and Turbo Stream broadcasting over Solid Cable or Redis. Menu-driven: presents the view-layer and Cable-adapter options as vetted menus with a Recommended default, detects the app's already-chosen CSS/JS stack (owned by rails-scaffold) and existing Hotwire wiring first, and verifies pages render and live updates broadcast. Apply when building interactive UI, wiring Turbo Frames/Streams, writing Stimulus controllers, choosing a view-component approach, adding a rich-text editor, adding live/broadcast updates, or making views accessible (WCAG/Section 508). Web apps only — not API-only.
 metadata:
   owner: rails-skills
   status: stable
@@ -31,6 +31,7 @@ Use this skill when the task is:
 - Building forms with `form_with` and Turbo-correct responses
 - Rich-text editing (Action Text / Trix) for user-authored formatted content
 - Live/real-time updates (broadcasting changes to connected clients)
+- Making views accessible (WCAG/Section 508): semantic markup, labeled forms, keyboard/focus, Turbo announcements
 - Wiring assets/CSS/JS within an already-chosen stack
 
 Do **not** use this skill when the task is:
@@ -62,6 +63,10 @@ grep -rln "has_rich_text" app/models 2>/dev/null; grep -rn "trix" config/importm
   picks.
 - If ViewComponent/Phlex is already installed, match it silently.
 - Detect the Cable adapter from `config/cable.yml` before adding real-time.
+- **Accessibility is baseline** for any view you build here ([accessibility.md](references/accessibility.md)).
+  If `STACK.md`'s **`Compliance`** row lists `wcag`/`section508`, **escalate** —
+  proactively offer an a11y pass per view and wire the axe test gate into CI;
+  `none`/absent → still apply the baseline, just don't gate.
 
 ## Menu
 
@@ -100,6 +105,12 @@ menued here — they were chosen in `../rails-scaffold/`; this skill consumes th
   broadcast-driven full-page freshness, streams for specific DOM changes.
 - **Real-time adapter:** Solid Cable unless you already run Redis or need its
   fan-out/latency. Keep `async` for dev/test only.
+- **Accessibility:** lead with semantic HTML and Rails' own helpers (`button_to`,
+  `f.label`) — they're accessible by default; a clickable `<div>` is not. The
+  Hotwire-specific work is restoring focus and screen-reader announcements that Turbo
+  navigation/streams drop — move focus to `<main>` on visit, stream user-facing
+  updates into an `aria-live` region. The WCAG conformance *level* is a policy choice,
+  not a default. See [accessibility.md](references/accessibility.md).
 
 ## Problem → Reference
 
@@ -112,6 +123,7 @@ menued here — they were chosen in `../rails-scaffold/`; this skill consumes th
 | Rich-text editor + content (Action Text / Trix, `has_rich_text`) | [references/rich-text.md](references/rich-text.md) |
 | Real-time: Action Cable, Turbo Stream broadcasting, Solid Cable vs Redis | [references/real-time.md](references/real-time.md) |
 | Assets, Propshaft, working within the chosen CSS/JS stack | [references/assets-and-css.md](references/assets-and-css.md) |
+| Accessibility: semantic markup, labeled forms, Turbo focus/announcements, axe test gate (WCAG/Section 508) | [references/accessibility.md](references/accessibility.md) |
 
 ## Verify
 
@@ -122,6 +134,7 @@ update actually broadcasts:
 bin/rails server -d && sleep 3
 curl -fsS localhost:3000/ -o /dev/null -w "root=%{http_code}\n"                       # page renders (200)
 curl -fsS localhost:3000/posts -o /tmp/p.html && grep -qE "turbo-frame|turbo-stream|data-controller" /tmp/p.html && echo "✓ Hotwire markup present"
+curl -fsS localhost:3000/ -o /tmp/r.html && grep -q "<main" /tmp/r.html && grep -qE 'lang="[a-z]' /tmp/r.html && echo "✓ a11y baseline (main landmark + html lang)"
 bin/rails assets:precompile >/dev/null 2>&1 && echo "✓ assets compile"
 kill "$(cat tmp/pids/server.pid)"
 ```
@@ -134,4 +147,7 @@ kill "$(cat tmp/pids/server.pid)"
 > [references/real-time.md](references/real-time.md).
 
 Then route to `../rails-testing/` for system tests, `../rails-performance/` for
-fragment caching, and record the view-layer/Cable picks in `STACK.md`.
+fragment caching, and record the view-layer/Cable picks in `STACK.md`. When
+`Compliance` is `wcag`/`section508`, the baseline grep above is not enough — wire the
+axe system-test gate from [accessibility.md](references/accessibility.md) into CI and
+do the manual keyboard/screen-reader pass.

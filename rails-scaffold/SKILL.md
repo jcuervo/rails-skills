@@ -79,10 +79,15 @@ and the post-generate routing map live in
 | 4 | **Omakase backends** | [omakase-defaults.md](references/omakase-defaults.md) | `--skip-solid`, `--skip-kamal`, `--skip-thruster`, `--skip-ci`, `--skip-rubocop`, `--skip-brakeman`, `--devcontainer` |
 | 5 | **Test framework** | defer to `../rails-testing/SKILL.md` | `-T/--skip-test` (skip Minitest for RSpec) |
 | 6 | **Auth** | defer to `../rails-auth/SKILL.md` | *(post-generate, no flag)* |
+| 7 | **Compliance posture** *(optional)* | [new-app-interview.md](references/new-app-interview.md) *(inline; no separate menu file)* | *(post-generate, no flag; default `none`)* |
 
-Concerns 5 and 6 are **decided here but wired by siblings**: this skill records
+Concerns 5, 6, and 7 are **decided here but wired by siblings**: this skill records
 the choice and sets the relevant `rails new` flag (e.g. `-T` when the user picks
-RSpec so Minitest scaffolding isn't generated), then routes.
+RSpec so Minitest scaffolding isn't generated), then routes. Concern 7 writes the
+`Compliance` row in `STACK.md` — recording `none` explicitly (so siblings can tell
+"asked, answered none" from "never asked") — an opt-in switch that makes siblings
+*offer* compliance primitives (audit trail, GDPR data rights, accessibility); default
+`none` keeps the suite unopinionated and changes nothing.
 
 ## Menu Summary
 
